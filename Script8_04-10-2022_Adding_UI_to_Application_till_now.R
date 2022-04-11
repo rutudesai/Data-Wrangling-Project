@@ -110,7 +110,10 @@ server <- function(input, output){
       mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
                                          ifelse(sentiment < 0, "Negative",
                                                 "Neutral"))) %>%
-      ggplot(aes(x = Sentiment_Category)) + geom_bar()
+      ggplot(aes(x = Sentiment_Category)) + geom_bar() + 
+      ggtitle("Bar Plot to compare Sentiments in Comments Section") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Sentiment Category") + ylab("Count of Sentiment")
   })
   
   output$search <- renderPrint({
