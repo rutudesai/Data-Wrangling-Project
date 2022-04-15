@@ -124,4 +124,4 @@ word_freq <- comment_sentiments_word_cloud_count %>%
 word_freq %>% arrange(-Freq)
 # WordCloud of Comments:
 word_cloud_plot <- wordcloud(words = word_freq$word, freq = word_freq$Freq, min.freq = 1, max.words=200, 
-          random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+                             random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))

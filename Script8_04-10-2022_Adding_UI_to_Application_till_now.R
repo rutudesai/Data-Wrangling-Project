@@ -8,6 +8,10 @@ library("textdata")
 library("ggplot2")
 library("tm")
 library("topicmodels")
+library("wordcloud")
+library("wordcloud2")
+library("RColorBrewer")
+
 
 yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
 
@@ -55,6 +59,7 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                     verbatimTextOutput("video"),
                                     verbatimTextOutput("stats"),
                                     verbatimTextOutput("comments"),
+                                    plotOutput("word_cloud"),
                                     plotOutput("sentiment_bar")),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
@@ -96,6 +101,21 @@ server <- function(input, output){
                                                 "Neutral")))
   })
   
+  output$word_cloud <- renderPlot({
+      get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(videoId, authorDisplayName, textDisplay) %>%
+      mutate(comment_number = row_number()) %>%
+      unnest_tokens(word, textDisplay) %>%
+      inner_join(get_sentiments("bing")) %>%
+      anti_join(stop_words)  %>%
+      group_by(word) %>% 
+      select(c(4)) %>% 
+      dplyr::summarise(frequency = n()) %>% 
+      with(wordcloud(words = word, freq = frequency, min.freq = 1, max.words=200, 
+                 random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2")))
+    
+  })
+  
   output$sentiment_bar <- renderPlot({
     get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
       select(videoId, authorDisplayName, textDisplay) %>%
@@ -118,7 +138,7 @@ server <- function(input, output){
   
   output$search <- renderPrint({
     print("Searched Results are : ")
-    yt_search(input$title_search) %>% select(video_id,title, channelTitle, description) %>% head(5)
+    yt_search(input$title_search) %>% select(video_id, title, channelTitle, description) %>% head(5)
   })
 }
 
