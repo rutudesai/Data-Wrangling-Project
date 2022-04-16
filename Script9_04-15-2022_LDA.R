@@ -16,7 +16,7 @@ library("topicmodels")
 # Creating OAuth Credentials and adding users to verify
 
 #Authenticating my Details
-yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token="")
+yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
 
 # Video Details
 #https://www.youtube.com/watch?v=N708P-A45D0
@@ -32,7 +32,7 @@ res1 <- yt_search("Barack Obama")
 head(res1[, 1:3])
 
 #Getting comments from a specific video comment section
-res2 <- get_comment_threads(c(video_id="N708P-A45D0"), max_results = 101)
+res2 <- get_comment_threads(c(video_id="x3Kilr271Xk"), max_results = 101)
 head(res2)
 
 #Creating df for only specific columns
@@ -71,23 +71,23 @@ head(comment_sentiments,20)
 # change of sentiments after every 15 comments:
 comment_sentiments <- comment_sentiments %>%
   mutate(index = comment_number %/% 15)
-head(comment_sentiments,30)
+tail(comment_sentiments,30)
 
 # count of sentiment at an interval of every 15 comments:
 comment_sentiments <- comment_sentiments %>%
   count(index, sentiment)
 head(comment_sentiments,30)
-
+tail(comment_sentiments,30)
 # using pivot_wider to make column wise table:
 comment_sentiment_wider <- comment_sentiments %>%
-  pivot_wider(names_from = "sentiment", values_from = "n")
+  pivot_wider(names_from = "sentiment", values_from = "n") %>% mutate(across(everything(), replace_na, 0))
 head(comment_sentiment_wider, 15)
-
+tail(comment_sentiment_wider, 15)
 # Calculating sentiment for each section of 15 comments:
 comment_sentiment_wider <- comment_sentiment_wider %>%
   mutate(sentiment = positive - negative)
-head(comment_sentiment_wider, 15)
-
+sample_n(comment_sentiment_wider, 15)
+tail(comment_sentiment_wider, 15)
 # Mutating Sentiment Positive, Negative or Neutral on the basis of final sentiment value obtained above
 comment_sentiment_wider_final <- comment_sentiment_wider %>%
   mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
@@ -111,10 +111,11 @@ inspect(mydtm)
 #Applying LDA
 mydtm_lda = LDA(mydtm, k = 2)
 mydtm_tidy = tidy(mydtm_lda)
-mydtm_tidy = rename(mydtm_tidy, word = term)
-mydtm_tidy = mydtm_tidy %>%
+names(mydtm_tidy)
+mydtm_tidy <- dplyr::rename(mydtm_tidy, word = term)
+mydtm_tidy <- mydtm_tidy %>%
   anti_join(stop_words)
-mydtm_tidy = rename(mydtm_tidy, term = word)
+mydtm_tidy <- dplyr::rename(mydtm_tidy, term = word)
 
 #Top 10 words in each topic
 mydtm_tidy %>% filter(topic==1) %>%
