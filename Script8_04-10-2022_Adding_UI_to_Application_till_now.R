@@ -55,12 +55,15 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                     tabPanel("Search with Video Link", 
                                     textInput(inputId = "title",
                                               label = "Enter the url",
-                                              value = "https://www.youtube.com/watch?v=YF1eYbfbH5k"),
+                                              value = "https://www.youtube.com/watch?v=EGcXF0iG-2s"),
                                     verbatimTextOutput("video"),
                                     verbatimTextOutput("stats"),
                                     verbatimTextOutput("comments"),
                                     plotOutput("word_cloud"),
+                                    plotOutput("overall_sentiment"),
                                     plotOutput("sentiment_bar")),
+                                    #verbatimTextOutput("topic_1")),
+                                    #plotOutput("topic_2"),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
                                               label = "Enter the text to be searched",
@@ -95,6 +98,7 @@ server <- function(input, output){
       mutate(index = comment_number %/% 15) %>%
       count(index, sentiment) %>%
       pivot_wider(names_from = "sentiment", values_from = "n") %>%
+      mutate(across(everything(), replace_na, 0)) %>%
       mutate(sentiment = positive - negative) %>%
       mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
                                          ifelse(sentiment < 0, "Negative",
@@ -111,9 +115,31 @@ server <- function(input, output){
       group_by(word) %>% 
       select(c(4)) %>% 
       dplyr::summarise(frequency = n()) %>% 
-      with(wordcloud(words = word, freq = frequency, min.freq = 1, max.words=200, 
-                 random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2")))
-    
+      with(wordcloud(words = word, freq = frequency, min.freq = 1, max.words=300, 
+                 random.order=FALSE, rot.per=0.35 ,colors=brewer.pal(8, "Dark2")))
+  })
+ 
+  output$overall_sentiment <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(videoId, authorDisplayName, textDisplay) %>%
+      mutate(comment_number = row_number()) %>%
+      unnest_tokens(word, textDisplay) %>%
+      anti_join(stop_words)  %>%
+      inner_join(get_sentiments("bing")) %>%
+      mutate(index = comment_number %/% 15) %>%
+      count(index, sentiment) %>%
+      pivot_wider(names_from = "sentiment", values_from = "n") %>%
+      mutate(across(everything(), replace_na, 0)) %>%
+      mutate(sentiment = positive - negative) %>%
+      mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
+                                         ifelse(sentiment < 0, "Negative",
+                                                "Neutral"))) %>%
+      ggplot(aes(index, sentiment)) + 
+      geom_bar(stat="identity") + 
+      geom_smooth() +
+      ggtitle("Bar Plot to Sentiments in Comments Section perevry 15 comments") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Comment Numbers") + ylab("Count of Sentiment Cateory")
   })
   
   output$sentiment_bar <- renderPlot({
@@ -126,6 +152,7 @@ server <- function(input, output){
       mutate(index = comment_number %/% 15) %>%
       count(index, sentiment) %>%
       pivot_wider(names_from = "sentiment", values_from = "n") %>%
+      mutate(across(everything(), replace_na, 0)) %>%
       mutate(sentiment = positive - negative) %>%
       mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
                                          ifelse(sentiment < 0, "Negative",
@@ -135,6 +162,33 @@ server <- function(input, output){
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Sentiment Category") + ylab("Count of Sentiment")
   })
+  
+  #output$topic_1 <- renderPrint({
+  #  get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+  #    select(textDisplay) %>%
+  #    tidy(LDA(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), k = 2)) %>% head(20)
+      #filter(topic == 1) %>%
+      #mutate(beta_rank = min_rank(desc(beta))) %>%
+      #arrange(beta_rank) %>%
+      #head(10) %>%
+      #mutate(term = reorder(term, beta)) %>%
+      #ggplot(aes(beta, term)) +
+      #geom_col(show.legend = FALSE)
+  #  })
+  
+  #output$topic_2 <- renderPlot({
+  #  get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+  #    select(textDisplay) %>%
+  #    rename(rename(tidy(LDA(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), k = 2)), word = term) %>%
+  #             anti_join(stop_words), term = word) %>%
+  #    filter(topic == 2) %>%
+  #    mutate(beta_rank = min_rank(desc(beta))) %>%
+  #    arrange(beta_rank) %>%
+  #    head(10) %>%
+  #    mutate(term = reorder(term, beta)) %>%
+  #    ggplot(aes(beta, term)) +
+  #    geom_col(show.legend = FALSE)
+  #})
   
   output$search <- renderPrint({
     print("Searched Results are : ")
