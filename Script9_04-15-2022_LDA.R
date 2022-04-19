@@ -16,23 +16,10 @@ library("topicmodels")
 # Creating OAuth Credentials and adding users to verify
 
 #Authenticating my Details
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
-
-# Video Details
-#https://www.youtube.com/watch?v=N708P-A45D0
-
-#Getting all details about a video with id as "N708P-A45D0"
-get_stats(video_id="N708P-A45D0")
-
-#Getting Video Details
-get_video_details(video_id="N708P-A45D0")
-
-#Searching all videos with a specific topic
-res1 <- yt_search("Barack Obama")
-head(res1[, 1:3])
+yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token = "")
 
 #Getting comments from a specific video comment section
-res2 <- get_comment_threads(c(video_id="x3Kilr271Xk"), max_results = 101)
+res2 <- get_comment_threads(c(video_id="EGcXF0iG-2s"), max_results = 101)
 head(res2)
 
 #Creating df for only specific columns
@@ -71,23 +58,24 @@ head(comment_sentiments,20)
 # change of sentiments after every 15 comments:
 comment_sentiments <- comment_sentiments %>%
   mutate(index = comment_number %/% 15)
-tail(comment_sentiments,30)
+head(comment_sentiments,30)
 
 # count of sentiment at an interval of every 15 comments:
 comment_sentiments <- comment_sentiments %>%
   count(index, sentiment)
 head(comment_sentiments,30)
-tail(comment_sentiments,30)
+
 # using pivot_wider to make column wise table:
 comment_sentiment_wider <- comment_sentiments %>%
-  pivot_wider(names_from = "sentiment", values_from = "n") %>% mutate(across(everything(), replace_na, 0))
+  pivot_wider(names_from = "sentiment", values_from = "n") %>%
+  mutate(across(everything(), replace_na, 0))
 head(comment_sentiment_wider, 15)
-tail(comment_sentiment_wider, 15)
+
 # Calculating sentiment for each section of 15 comments:
 comment_sentiment_wider <- comment_sentiment_wider %>%
   mutate(sentiment = positive - negative)
-sample_n(comment_sentiment_wider, 15)
-tail(comment_sentiment_wider, 15)
+head(comment_sentiment_wider, 15)
+
 # Mutating Sentiment Positive, Negative or Neutral on the basis of final sentiment value obtained above
 comment_sentiment_wider_final <- comment_sentiment_wider %>%
   mutate(Sentiment_Category = ifelse(sentiment > 0, "Positive",
@@ -108,14 +96,17 @@ myCorpus = Corpus(VectorSource(df2$textDisplay))
 mydtm = DocumentTermMatrix(myCorpus)
 inspect(mydtm)
 
+#Eliminating zero document DTM
+row_sum <- apply(mydtm, 1, FUN = sum)
+mydtm=mydtm[row_sum!=0,]
+
 #Applying LDA
 mydtm_lda = LDA(mydtm, k = 2)
 mydtm_tidy = tidy(mydtm_lda)
-names(mydtm_tidy)
-mydtm_tidy <- dplyr::rename(mydtm_tidy, word = term)
-mydtm_tidy <- mydtm_tidy %>%
+mydtm_tidy = rename(mydtm_tidy, word = term)
+mydtm_tidy = mydtm_tidy %>%
   anti_join(stop_words)
-mydtm_tidy <- dplyr::rename(mydtm_tidy, term = word)
+mydtm_tidy = rename(mydtm_tidy, term = word)
 
 #Top 10 words in each topic
 mydtm_tidy %>% filter(topic==1) %>%
@@ -123,3 +114,19 @@ mydtm_tidy %>% filter(topic==1) %>%
 mydtm_tidy %>% filter(topic==2) %>%
   mutate(beta_rank = min_rank(desc(beta))) %>% arrange(beta_rank) %>% head(10)
 
+#Plotting graphs
+mydtm_tidy %>% filter(topic==1) %>%
+  mutate(beta_rank = min_rank(desc(beta))) %>%
+  arrange(beta_rank) %>%
+  head(10) %>%
+  mutate(term = reorder(term, beta)) %>%
+  ggplot(aes(beta, term)) +
+  geom_col(show.legend = FALSE)
+
+mydtm_tidy %>% filter(topic==2) %>%
+  mutate(beta_rank = min_rank(desc(beta)))%>%
+  arrange(beta_rank) %>%
+  head(10) %>%
+  mutate(term = reorder(term, beta)) %>%
+  ggplot(aes(beta, term)) +
+  geom_col(show.legend = FALSE)
