@@ -61,9 +61,9 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                     verbatimTextOutput("comments"),
                                     plotOutput("word_cloud"),
                                     plotOutput("overall_sentiment"),
-                                    plotOutput("sentiment_bar")),
-                                    #verbatimTextOutput("topic_1")),
-                                    #plotOutput("topic_2"),
+                                    plotOutput("sentiment_bar"),
+                                    plotOutput("topic_1"),
+                                    plotOutput("topic_2")),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
                                               label = "Enter the text to be searched",
@@ -163,32 +163,51 @@ server <- function(input, output){
       xlab("Sentiment Category") + ylab("Count of Sentiment")
   })
   
-  #output$topic_1 <- renderPrint({
-  #  get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
-  #    select(textDisplay) %>%
-  #    tidy(LDA(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), k = 2)) %>% head(20)
-      #filter(topic == 1) %>%
-      #mutate(beta_rank = min_rank(desc(beta))) %>%
-      #arrange(beta_rank) %>%
-      #head(10) %>%
-      #mutate(term = reorder(term, beta)) %>%
-      #ggplot(aes(beta, term)) +
-      #geom_col(show.legend = FALSE)
-  #  })
+  output$topic_1 <- renderPlot({
+      get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(textDisplay) %>%
+      VectorSource(.) %>%
+      Corpus(.) %>%
+      DocumentTermMatrix(.) %>%
+      .[apply(. , 1, sum) !=0, ] %>%
+      LDA(., k = 2) %>%
+      tidy(.) %>%
+      as_tibble() %>%
+      rename(word = term) %>%
+      anti_join(stop_words) %>%
+      rename(term = word) %>%
+      filter(topic == 1) %>%
+      mutate(beta_rank = min_rank(desc(beta))) %>%
+      arrange(beta_rank) %>%
+      head(10) %>%
+      mutate(term = reorder(term, beta)) %>%
+      ggplot(aes(beta, term)) +
+      geom_col(show.legend = FALSE)
+      })
+      
+#      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
   
-  #output$topic_2 <- renderPlot({
-  #  get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
-  #    select(textDisplay) %>%
-  #    rename(rename(tidy(LDA(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), k = 2)), word = term) %>%
-  #             anti_join(stop_words), term = word) %>%
-  #    filter(topic == 2) %>%
-  #    mutate(beta_rank = min_rank(desc(beta))) %>%
-  #    arrange(beta_rank) %>%
-  #    head(10) %>%
-  #    mutate(term = reorder(term, beta)) %>%
-  #    ggplot(aes(beta, term)) +
-  #    geom_col(show.legend = FALSE)
-  #})
+  output$topic_2 <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(textDisplay) %>%
+      VectorSource(.) %>%
+      Corpus(.) %>%
+      DocumentTermMatrix(.) %>%
+      .[apply(. , 1, sum) !=0, ] %>%
+      LDA(., k = 2) %>%
+      tidy(.) %>%
+      as_tibble() %>%
+      rename(word = term) %>%
+      anti_join(stop_words) %>%
+      rename(term = word) %>%
+      filter(topic == 2) %>%
+      mutate(beta_rank = min_rank(desc(beta))) %>%
+      arrange(beta_rank) %>%
+      head(10) %>%
+      mutate(term = reorder(term, beta)) %>%
+      ggplot(aes(beta, term)) +
+      geom_col(show.legend = FALSE)
+  })
   
   output$search <- renderPrint({
     print("Searched Results are : ")
