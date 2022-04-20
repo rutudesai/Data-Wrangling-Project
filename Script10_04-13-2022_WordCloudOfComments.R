@@ -125,3 +125,16 @@ word_freq %>% arrange(-Freq)
 # WordCloud of Comments:
 word_cloud_plot <- wordcloud(words = word_freq$word, freq = word_freq$Freq, min.freq = 1, max.words=200, 
                              random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+
+head(text_df,15)
+
+text_df_word_cloud_count <- text_df %>%
+  group_by(word) %>% arrange(word) %>% select(c(3))
+unique(text_df_word_cloud_count)
+
+text_df_word_freq <- text_df_word_cloud_count %>% 
+  dplyr::summarise(Freq = n())
+text_df_word_freq %>% arrange(-Freq)
+
+text_df_word_clud <- wordcloud(words = text_df_word_freq$word, freq = text_df_word_freq$Freq, min.freq = 1, max.words=200, 
+                               random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))

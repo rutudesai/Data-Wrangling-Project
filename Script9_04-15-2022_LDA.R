@@ -16,7 +16,7 @@ library("topicmodels")
 # Creating OAuth Credentials and adding users to verify
 
 #Authenticating my Details
-yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token = "")
+yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
 
 #Getting comments from a specific video comment section
 res2 <- get_comment_threads(c(video_id="EGcXF0iG-2s"), max_results = 101)
@@ -129,4 +129,4 @@ mydtm_tidy %>% filter(topic==2) %>%
   head(10) %>%
   mutate(term = reorder(term, beta)) %>%
   ggplot(aes(beta, term)) +
-  geom_col(show.legend = FALSE)
+  geom_col(show.legend = FALSE) + scale_fill_brewer(palette = "Greens")

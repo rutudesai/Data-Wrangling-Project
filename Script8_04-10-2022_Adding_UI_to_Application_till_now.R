@@ -29,28 +29,29 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                            tabPanel("Project Details", 
                                     tags$h2("Details About Project :"),
                                     tags$p(tags$h3(tags$li("Project Aim : ")), "The main aim of the project is to analyse the sentiments of the comments
-                                           from different YouTube Comments and to find the topic based on the
+                                           from different YouTube and to find the topic based on the
                                            classification of the comments using Latent Dirichlet Allocation (LDA) method
                                            and try to present the sentiment score for each video by establishing a colour
                                            grading for each sentiment on public opinions.",
                                            tags$h3(tags$li("Abstract : ")), "We know that data is generated tremendously every second of the day and
                                            YouTube being one of the most favourite video streaming platform which has
                                            a lot of data generated on each video which can have different types of
-                                           context (semantically). To find if the comments are acceptable or not it's very
-                                           difficult nowadays so to find the Topic from comments and finding the
-                                           comments which are good and bad so that bad comments can be filtered is
-                                           really necessary.",
-                                           tags$h3(tags$li("About Data and Process : ")),"We will scrape the data from different genre YouTube comment sections and
-                                           append it to a .csv file for further analysis.",
-                                           tags$h3(tags$li("Methodology Used : ")), "We will start by scraping data from YouTube comments of different genres.
-                                           Use different methodologies to clean the data, for instance using regex to
-                                           find specific patterns, removing stop words.
-                                           Use Data Visualizations to show different graphs and charts.
-                                           Will then compare both methods of LDA (VEM and Gibbs) and try to compare
-                                           each model with different 'k' values.
-                                           Try to find/guess topics from the model created above.
-                                           Give out the sentiment score of each video.
-                                           Colour grading will be established on public sentiments.")),
+                                           context (semantically). So each and every video has lots of comments and it can be sometimes difficult to go through
+                                           the whole video to understand what the video is about. To minimize that effort, this application summarizes the 
+                                           overall sentiment in the comment sections and finds the top words used in the comments to get a better understanding of
+                                           what is the topic of the video.",
+                                           tags$h3(tags$li("About Data and Process : ")),"We get the data everytime from YouTube Comments sections with the help of Video Id using 
+                                           Tuber Package in R. We then use the data and process it to make it in more readbale and further usable format. We Also create Document Term Matrix
+                                           for each video so that we can then apply Latent Dirichlet Allocation to get Topics from the Comments of that specific Video. 
+                                           With the help of Shiny Library we then show all our data in the form of a Website with in built tags for html and css.",
+                                           tags$h3(tags$li("Methodology Used : ")), "We start by scraping data from YouTube comments.
+                                           Use different functions to clean the data, for instance using regex to
+                                           find specific patterns, removing stop words, making it in the format which can be further used,
+                                           renaming column names so that specific joins can also be performed.
+                                           Then we create a COrpus and apply Document Term Matrix to that corpus to get the
+                                           terms in every documents. We then Use LDA to find the topics from the comments of the Video and using 
+                                           different libraries and functions to plots bar charts and word clouds to compare the results with different approach/method used.
+                                           User can then try to find/guess topics from the model created above.")),
                            navbarMenu(title = "Application",
                                     tabPanel("Search with Video Link", 
                                     textInput(inputId = "title",
