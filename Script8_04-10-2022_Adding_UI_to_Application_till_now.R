@@ -61,7 +61,11 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                     verbatimTextOutput("video"),
                                     verbatimTextOutput("stats"),
                                     verbatimTextOutput("comments"),
-                                    plotOutput("word_cloud"),
+                                    fluidRow(
+                                      column(6,
+                                            plotOutput("word_cloud_before")),
+                                      column(6, 
+                                            plotOutput("word_cloud_after"))),
                                     plotOutput("overall_sentiment"),
                                     plotOutput("sentiment_bar"),
                                     fluidRow(
@@ -110,7 +114,18 @@ server <- function(input, output){
                                                 "Neutral")))
   })
   
-  output$word_cloud <- renderPlot({
+  output$word_cloud_before <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(videoId, authorDisplayName, textDisplay) %>%
+      unnest_tokens(word, textDisplay) %>%
+      group_by(word) %>% 
+      select(c(3)) %>% 
+      dplyr::summarise(frequency = n()) %>% 
+      with(wordcloud(words = word, freq = frequency, min.freq = 1, max.words=300, 
+                     random.order=FALSE, rot.per=0.35 ,colors=brewer.pal(8, "Dark2")))
+  })
+  
+  output$word_cloud_after <- renderPlot({
       get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
       select(videoId, authorDisplayName, textDisplay) %>%
       mutate(comment_number = row_number()) %>%
