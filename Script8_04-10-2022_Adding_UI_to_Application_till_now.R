@@ -63,8 +63,11 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                     plotOutput("word_cloud"),
                                     plotOutput("overall_sentiment"),
                                     plotOutput("sentiment_bar"),
-                                    plotOutput("topic_1"),
-                                    plotOutput("topic_2")),
+                                    fluidRow(
+                                      column(6,
+                                             plotOutput("topic_1")),
+                                      column(6,
+                                             plotOutput("topic_2")))),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
                                               label = "Enter the text to be searched",
@@ -161,7 +164,7 @@ server <- function(input, output){
       ggplot(aes(x = Sentiment_Category)) + geom_bar() + 
       ggtitle("Bar Plot to compare Sentiments in Comments Section") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
-      xlab("Sentiment Category") + ylab("Count of Sentiment")
+      xlab("Sentiment Category") + ylab("Count of Sentiment") + scale_fill_brewer(palette = "Reds")
   })
   
   output$topic_1 <- renderPlot({
@@ -183,8 +186,11 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      geom_col(show.legend = FALSE)
-      })
+      geom_col(show.legend = FALSE) +
+      ggtitle("Bar Plot to Show Terms in Topic 1 after LDA Classification") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Beta Score") + ylab("Word") + scale_fill_brewer(palette = "Greens")
+      }) 
       
 #      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
   
@@ -207,7 +213,11 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      geom_col(show.legend = FALSE)
+      scale_fill_brewer(palette = "Blues") +
+      geom_col(show.legend = FALSE) +
+      ggtitle("Bar Plot to Show Terms in Topic 2 after LDA Classification") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Beta Score") + ylab("Word")
   })
   
   output$search <- renderPrint({
