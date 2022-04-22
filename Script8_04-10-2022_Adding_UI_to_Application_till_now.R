@@ -15,10 +15,11 @@ library("RColorBrewer")
 
 yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
 
+
 #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
 #to extract pecific pattern after a pattern in r
 ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
-                           tags$p("This is an", tags$strong("application")," which finds the overall sentiment of any video on YouTube and classifies the topic of video based on the User Comments."),
+                           tags$p("This is an", tags$strong("application")," which finds the ", tags$strong(" overall sentiment")," of any video on YouTube and ", tags$strong("classifies")," the topic of video based on the User Comments."),
                            tags$hr(),
                            navbarPage(title = "16:954:597:01",
                            tabPanel("About Us", tags$h2("Team Introduction : "),
@@ -53,26 +54,40 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                            different libraries and functions to plots bar charts and word clouds to compare the results with different approach/method used.
                                            User can then try to find/guess topics from the model created above.")),
                            navbarMenu(title = "Application",
-                                    tabPanel("Search with Video Link", 
-                                    textInput(inputId = "title",
+                                    tabPanel("Search with Video Link",
+                                  textInput(inputId = "title",
                                               label = "Enter the url",
-                                              value = "https://www.youtube.com/watch?v=EGcXF0iG-2s"),
+                                              value = "https://www.youtube.com/watch?v=fUpChfNN5Uo"),
                                               #value = "https://www.youtube.com/watch?v=hSRoKK4ZeRE"),
                                     verbatimTextOutput("video"),
                                     verbatimTextOutput("stats"),
                                     verbatimTextOutput("comments"),
+                                    tags$h2("Word Clouds"),
+                                    tags$p("We compare the Word Cloud before and after cleaning the data we collect."),
                                     fluidRow(
                                       column(6,
                                             plotOutput("word_cloud_before")),
                                       column(6, 
                                             plotOutput("word_cloud_after"))),
+                                    tags$h2("Overall Sentiment in Comments"),
+                                    tags$p("We take data, clean and find the sentiments and classify the Overall Sentiments in 3 parts : Positive, Negative and Neutral."),
                                     plotOutput("overall_sentiment"),
+                                    tags$h2("Overall Sentiment from Comments"),
                                     plotOutput("sentiment_bar"),
+                                    tags$h2("Topics after LDA"),
+                                    tags$p("We compare 2 Methods of Latent Dirichlet Allocation : 1) VEM and 2) Gibbs, to see how topics are classified."),
+                                    tags$h2("VEM Methd-2 Topics"),
                                     fluidRow(
                                       column(6,
-                                             plotOutput("topic_1")),
+                                             plotOutput("topic_1_vem")),
                                       column(6,
-                                             plotOutput("topic_2")))),
+                                             plotOutput("topic_2_vem"))),
+                                    tags$h2("Gibbs Methd-2 Topics"),
+                                    fluidRow(
+                                      column(6,
+                                             plotOutput("topic_1_gibbs")),
+                                      column(6,
+                                             plotOutput("topic_2_gibbs")))),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
                                               label = "Enter the text to be searched",
@@ -143,7 +158,7 @@ server <- function(input, output){
       with(wordcloud(words = word, freq = frequency, min.freq = 1, max.words=300, 
                  random.order=FALSE, rot.per=0.35 ,colors=brewer.pal(8, "Dark2")))
   })
- 
+  
   output$overall_sentiment <- renderPlot({
     #get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
     #  select(videoId, authorDisplayName, textDisplay) %>%
@@ -190,8 +205,8 @@ server <- function(input, output){
       xlab("Sentiment Category") + ylab("Count of Sentiment") + scale_fill_brewer(palette = "Reds")
   })
   
-  output$topic_1 <- renderPlot({
-      get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+  output$topic_1_vem <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
       select(textDisplay) %>%
       VectorSource(.) %>%
       Corpus(.) %>%
@@ -213,11 +228,11 @@ server <- function(input, output){
       ggtitle("Bar Plot to Show Terms in Topic 1 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Beta Score") + ylab("Word") + scale_fill_brewer(palette = "Greens")
-      }) 
-      
-#      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
+  }) 
   
-  output$topic_2 <- renderPlot({
+  #      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
+  
+  output$topic_2_vem <- renderPlot({
     get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
       select(textDisplay) %>%
       VectorSource(.) %>%
@@ -243,10 +258,63 @@ server <- function(input, output){
       xlab("Beta Score") + ylab("Word")
   })
   
+  output$topic_1_gibbs <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(textDisplay) %>%
+      VectorSource(.) %>%
+      Corpus(.) %>%
+      DocumentTermMatrix(.) %>%
+      .[apply(. , 1, sum) !=0, ] %>%
+      LDA(., k = 2, method = "Gibbs") %>%
+      tidy(.) %>%
+      as_tibble() %>%
+      rename(word = term) %>%
+      anti_join(stop_words) %>%
+      rename(term = word) %>%
+      filter(topic == 1) %>%
+      mutate(beta_rank = min_rank(desc(beta))) %>%
+      arrange(beta_rank) %>%
+      head(10) %>%
+      mutate(term = reorder(term, beta)) %>%
+      ggplot(aes(beta, term)) +
+      geom_col(show.legend = FALSE) +
+      ggtitle("Bar Plot to Show Terms in Topic 1 after LDA Classification") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Beta Score") + ylab("Word") + scale_fill_brewer(palette = "Greens")
+  }) 
+  
+  #      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
+  
+  output$topic_2_gibbs <- renderPlot({
+    get_comment_threads(c(video_id=sub(".*v=", "", input$title)), max_results = 101) %>% 
+      select(textDisplay) %>%
+      VectorSource(.) %>%
+      Corpus(.) %>%
+      DocumentTermMatrix(.) %>%
+      .[apply(. , 1, sum) !=0, ] %>%
+      LDA(., k = 2, method = "Gibbs") %>%
+      tidy(.) %>%
+      as_tibble() %>%
+      rename(word = term) %>%
+      anti_join(stop_words) %>%
+      rename(term = word) %>%
+      filter(topic == 2) %>%
+      mutate(beta_rank = min_rank(desc(beta))) %>%
+      arrange(beta_rank) %>%
+      head(10) %>%
+      mutate(term = reorder(term, beta)) %>%
+      ggplot(aes(beta, term)) +
+      scale_fill_brewer(palette = "Blues") +
+      geom_col(show.legend = FALSE) +
+      ggtitle("Bar Plot to Show Terms in Topic 2 after LDA Classification") + 
+      theme(plot.title = element_text(size = 10, hjust=0.5)) +
+      xlab("Beta Score") + ylab("Word")
+  })
   output$search <- renderPrint({
     print("Searched Results are : ")
     yt_search(input$title_search) %>% select(video_id, title, channelTitle, description) %>% head(5)
   })
+  
 }
 
 shinyApp(ui = ui, server = server)
