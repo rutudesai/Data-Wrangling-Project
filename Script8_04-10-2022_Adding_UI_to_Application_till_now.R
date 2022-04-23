@@ -19,9 +19,9 @@ yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.c
 #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
 #to extract pecific pattern after a pattern in r
 ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
-                           tags$p("This is an", tags$strong("application")," which finds the ", tags$strong(" overall sentiment")," of any video on YouTube and ", tags$strong("classifies")," the topic of video based on the User Comments."),
+                           tags$p("Celina is an", tags$strong("application/smart assistant")," which finds the ", tags$strong(" overall sentiment")," of any video on YouTube and ", tags$strong("classifies")," the topic of video based on the User Comments."),
                            tags$hr(),
-                           navbarPage(title = "16:954:597:01",
+                           navbarPage(title = "CELINA",
                            tabPanel("About Us", tags$h2("Team Introduction : "),
                                     tags$li("Rajesh Bhat : rmb317"),
                                     tags$li("Rutu Desai : rmd228"),
@@ -176,9 +176,9 @@ server <- function(input, output){
     #                                            "Neutral"))) %>%
       comments() %>%
       ggplot(aes(index, sentiment)) + 
-      geom_bar(stat="identity") + 
+      geom_bar(stat="identity", fill='lightblue') + 
       geom_smooth() +
-      ggtitle("Bar Plot to Sentiments in Comments Section perevry 15 comments") + 
+      ggtitle("Bar Plot to Sentiments in Comments Section per every 15 comments") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Comment Numbers") + ylab("Count of Sentiment Cateory")
   })
@@ -199,7 +199,7 @@ server <- function(input, output){
     #                                     ifelse(sentiment < 0, "Negative",
     #                                            "Neutral"))) %>%
      comments() %>% 
-     ggplot(aes(x = Sentiment_Category)) + geom_bar() + 
+     ggplot(aes(x = Sentiment_Category, fill = Sentiment_Category)) + geom_bar() + 
       ggtitle("Bar Plot to compare Sentiments in Comments Section") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Sentiment Category") + ylab("Count of Sentiment") + scale_fill_brewer(palette = "Reds")
@@ -224,10 +224,10 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      geom_col(show.legend = FALSE) +
+      geom_col(show.legend = FALSE, fill = 'green') +
       ggtitle("Bar Plot to Show Terms in Topic 1 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
-      xlab("Beta Score") + ylab("Word") + scale_fill_brewer(palette = "Greens")
+      xlab("Beta Score") + ylab("Word")
   }) 
   
   #      as_tibble(tidy(LDA(.[apply(DocumentTermMatrix(Corpus(VectorSource(.$textDisplay))), 1, sum)!=0, ], k=2)))
@@ -251,8 +251,7 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      scale_fill_brewer(palette = "Blues") +
-      geom_col(show.legend = FALSE) +
+      geom_col(show.legend = FALSE, fill = 'yellow') +
       ggtitle("Bar Plot to Show Terms in Topic 2 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Beta Score") + ylab("Word")
@@ -277,7 +276,7 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      geom_col(show.legend = FALSE) +
+      geom_col(show.legend = FALSE, fill = 'orange') +
       ggtitle("Bar Plot to Show Terms in Topic 1 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Beta Score") + ylab("Word") + scale_fill_brewer(palette = "Greens")
@@ -304,8 +303,7 @@ server <- function(input, output){
       head(10) %>%
       mutate(term = reorder(term, beta)) %>%
       ggplot(aes(beta, term)) +
-      scale_fill_brewer(palette = "Blues") +
-      geom_col(show.legend = FALSE) +
+      geom_col(show.legend = FALSE, fill = 'blue') +
       ggtitle("Bar Plot to Show Terms in Topic 2 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Beta Score") + ylab("Word")
