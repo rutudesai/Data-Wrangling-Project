@@ -1,5 +1,5 @@
 ---
-title: "Celina - Youtube Sentiment Analysis"
+title: "Celena - Youtube Sentiment Analysis"
 author: 'Rajesh Bhatt (net id: rmb317) Rutu Desai (net id:rmd228) Shubham Kokane (net id: ssk203)'
 date: "04/25/2022"
 output:
@@ -30,7 +30,7 @@ library("RColorBrewer")
 
 ## Authenticating yotube analytics:
 ```{r youtube_analytics}
-yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token = "")
+yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
 ```
 
 ## Getting comments for a specific video based on Video ID:

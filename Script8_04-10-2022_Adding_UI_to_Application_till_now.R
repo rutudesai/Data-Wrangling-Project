@@ -14,14 +14,15 @@ library("RColorBrewer")
 
 
 yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
+#yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token = "")
 
 
 #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
 #to extract pecific pattern after a pattern in r
 ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
-                           tags$p("Celina is an", tags$strong("application/smart assistant")," which finds the ", tags$strong(" overall sentiment")," of any video on YouTube and ", tags$strong("classifies")," the topic of video based on the User Comments."),
+                           tags$p("Celena is an", tags$strong("application/smart assistant")," which finds the ", tags$strong(" overall sentiment")," of any video on YouTube and ", tags$strong("classifies")," the topic of video based on the User Comments."),
                            tags$hr(),
-                           navbarPage(title = "CELINA",
+                           navbarPage(title = "CELENA",
                            tabPanel("About Us", tags$h2("Team Introduction : "),
                                     tags$li("Rajesh Bhat : rmb317"),
                                     tags$li("Rutu Desai : rmd228"),
@@ -59,6 +60,8 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                               label = "Enter the url",
                                               value = "https://www.youtube.com/watch?v=fUpChfNN5Uo"),
                                               #value = "https://www.youtube.com/watch?v=hSRoKK4ZeRE"),
+                                              #value = "https://www.youtube.com/watch?v=4x4MND-Rhrc"),
+                                              #value = "https://www.youtube.com/watch?v=Rx2inwUj_F0"),
                                     verbatimTextOutput("video"),
                                     verbatimTextOutput("stats"),
                                     verbatimTextOutput("comments"),
@@ -87,7 +90,8 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                                       column(6,
                                              plotOutput("topic_1_gibbs")),
                                       column(6,
-                                             plotOutput("topic_2_gibbs")))),
+                                             plotOutput("topic_2_gibbs"))),
+                                  verbatimTextOutput("videoTitle")),
                                     tabPanel("Search Video Based on a Topic and get Video Link",
                                     textInput(inputId = "title_search",
                                               label = "Enter the text to be searched",
@@ -307,6 +311,10 @@ server <- function(input, output){
       ggtitle("Bar Plot to Show Terms in Topic 2 after LDA Classification") + 
       theme(plot.title = element_text(size = 10, hjust=0.5)) +
       xlab("Beta Score") + ylab("Word")
+  })
+  output$videoTitle <- renderPrint({
+    print("Video Title is : ")
+    get_video_details(video_id())$items[[1]]$snippet$title
   })
   output$search <- renderPrint({
     print("Searched Results are : ")
