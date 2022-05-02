@@ -14,17 +14,27 @@ About the Documents on Github :
 FINAL SHINY APPLICATION is in Script8_04-10-2022_Adding_UI_to_Applicatio_till_now.R File.
 
 Script1_04-01-2022.R : Using Selenium and SelectorGadget to try to scrape YouTube Video Comments.
+
 Script2_04-04-2022.R : Used tuber Package to connect with YouTube API and get comments and video details from YouTube.
+
 Script3_04-05-2022_ShinyApp.R : Trying to create a basic Shiny Application in R to later use it for our Project Application.
+
 Script4_04-06-2022.R : Working on getting comments and cleaning the data, made sentiment column to give sentiment to comment words.
+
 Script5_04-07-2022_Finding_Overall_Sentiment_from_Comments.R : Making Bar Chart for the overall Sentiments in the Comments Section.
+
 Script6_04-07-2022_ShinyApp_Project_UI.R : Started to work on UI of our Final Shiny Application using what we have done till now.
+
 Script7_04-08-2022_Data_Preprocessing.R : Modified the functionalities in the required format for Shiny Application.
+
 Script8_04-10-2022_Adding_UI_to_Applicatio_till_now.R : Final Application in Shiny.
+
 Script9_04-15-2022_LDA.R : Added LDA Methods for the Topic Modeling.
+
 Script10_04-13-2022_WordCloudOfComments.R : Created Word Clouds for before and after cleaning of Data.
 
 ProjectProposal.pdf : Initial Project Proposal of the Project.
+
 project.Rmd : .rmd file of our whole project wih explanantion at each step.
 
 Team Members :
