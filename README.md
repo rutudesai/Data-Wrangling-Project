@@ -9,6 +9,9 @@ The objective of the project is to develop an analytical application utilizing m
 Motivation : 
 In general, many of us have to spend time on going through the majority of the video or glance comment section to understand and realise the quality of the video, that could result in utter waste of time. So to overcome that issue, we created an application which classifies user comments of that Video and tries to show the overall sentiment from start to end of the comments section and with the help of LDA Methods it classifies the topic about the video.
 
+Professional Touch:
+We name this analytical application as CELENA. We can think of CELENA as an ALEXA or SIRI which we have been using for decades. Similarly, CELENA can be a mobile apps which can be our smart digital assistant which can assist with Sentiment Ratings and Topics of the video upfront
+
 About the Documents on Github :
 
 FINAL SHINY APPLICATION is in Script8_04-10-2022_Adding_UI_to_Applicatio_till_now.R File.
