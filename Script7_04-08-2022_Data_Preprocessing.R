@@ -9,7 +9,7 @@ library("ggplot2")
 library("tm")
 library("topicmodels")
 
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
+yt_oauth()
 
 #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
 #to extract pecific pattern after a pattern in r
