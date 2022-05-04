@@ -14,7 +14,7 @@ We name this analytical application as CELENA. We can think of CELENA as an ALEX
 
 About the Documents on Github :
 
-FINAL SHINY APPLICATION is in Script8_04-10-2022_Adding_UI_to_Applicatio_till_now.R File.
+FINAL SHINY APPLICATION is in Script8_04-10-2022_FinalProjectApplication.R
 
 Script1_04-01-2022.R : Using Selenium and SelectorGadget to try to scrape YouTube Video Comments.
 
@@ -30,7 +30,7 @@ Script6_04-07-2022_ShinyApp_Project_UI.R : Started to work on UI of our Final Sh
 
 Script7_04-08-2022_Data_Preprocessing.R : Modified the functionalities in the required format for Shiny Application.
 
-Script8_04-10-2022_Adding_UI_to_Applicatio_till_now.R : Final Application in Shiny.
+Script8_04-10-2022_FinalProjectApplication.R : Final Application in Shiny.
 
 Script9_04-15-2022_LDA.R : Added LDA Methods for the Topic Modeling.
 
@@ -38,7 +38,11 @@ Script10_04-13-2022_WordCloudOfComments.R : Created Word Clouds for before and a
 
 ProjectProposal.pdf : Initial Project Proposal of the Project.
 
-project.Rmd : .rmd file of our whole project wih explanantion at each step.
+project.Rmd : .rmd file of our whole project with explanation at each step.
+
+Data_Wrangling_Presentation.pdf : PDF of Final Presentation done in Class.
+
+Data_Wrangling_Presentation.pptx : PPT of Final Presentation done in Class.
 
 Team Members :
 1) Rajesh Bhat
