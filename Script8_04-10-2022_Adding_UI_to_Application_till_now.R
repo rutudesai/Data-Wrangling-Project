@@ -13,9 +13,7 @@ library("wordcloud2")
 library("RColorBrewer")
 
 
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
-#yt_oauth("192603887469-rasooci3vu64kfroe901cnsmnp0lghhe.apps.googleusercontent.com", "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", token = "")
-
+yt_oauth()
 
 #https://statisticsglobe.com/extract-substring-before-or-after-pattern-in-r
 #to extract pecific pattern after a pattern in r

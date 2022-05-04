@@ -16,7 +16,7 @@ library("topicmodels")
 # Creating OAuth Credentials and adding users to verify
 
 #Authenticating my Details
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
+yt_oauth()
 
 #Getting comments from a specific video comment section
 res2 <- get_comment_threads(c(video_id="EGcXF0iG-2s"), max_results = 101)

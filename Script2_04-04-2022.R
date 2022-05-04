@@ -10,7 +10,7 @@ library("tuber")
 # Creating OAuth Credentials and adding users to verify
 
 #Authenticating my Details
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
+yt_oauth()
 
 # Video Details
 #https://www.youtube.com/watch?v=N708P-A45D0
