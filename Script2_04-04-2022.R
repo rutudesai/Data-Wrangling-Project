@@ -13,20 +13,20 @@ library("tuber")
 yt_oauth()
 
 # Video Details
-#https://www.youtube.com/watch?v=N708P-A45D0
+#videoURL
 
-#Getting all details about a video with id as "N708P-A45D0"
+#Getting all details about a video with id as "videoId"
 get_stats(video_id="N708P-A45D0")
 
 #Getting Video Details
-get_video_details(video_id="N708P-A45D0")
+get_video_details(video_id="videoId")
 1
 #Searching all videos with a specific topic
-res1 <- yt_search("Barack Obama")
+res1 <- yt_search("searchText")
 head(res1[, 1:3])
 
 #Getting comments from a specific video comment section
 #Any number >100 fetches all results of comments
-res2 <- get_comment_threads(c(video_id="N708P-A45D0"), max_results = 101)
+res2 <- get_comment_threads(c(video_id="videoID"), max_results = 101)
 head(res2)
 
