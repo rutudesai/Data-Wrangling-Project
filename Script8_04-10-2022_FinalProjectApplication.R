@@ -22,9 +22,9 @@ ui <- fluidPage(tags$h1("Data Wrangling and Husbandry 16:954:597:01 Project"),
                            tags$hr(),
                            navbarPage(title = "CELENA",
                            tabPanel("About Us", tags$h2("Team Introduction : "),
-                                    tags$li("Rajesh Bhat : rmb317"),
-                                    tags$li("Rutu Desai : rmd228"),
-                                    tags$li("Shubham Kokane : ssk203")
+                                    tags$li("Rajesh Bhat "),
+                                    tags$li("Rutu Desai "),
+                                    tags$li("Shubham Kokane ")
                                     ),
                            tabPanel("Project Details", 
                                     tags$h2("Details About Project :"),
