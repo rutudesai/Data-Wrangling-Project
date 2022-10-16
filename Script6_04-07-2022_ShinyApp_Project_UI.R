@@ -16,13 +16,13 @@ yt_oauth()
 #to extract pecific pattern after a pattern in r
 ui <- fluidPage(textInput(inputId = "title",
                           label = "Enter the url",
-                          value = "https://www.youtube.com/watch?v=YF1eYbfbH5k"),
+                          value = "videoURL"),
                 verbatimTextOutput("video"),
                 verbatimTextOutput("stats"),
                 verbatimTextOutput("comments"),
                 textInput(inputId = "title_search",
                           label = "Enter the text to be searched",
-                          value = "Barack Obama"),
+                          value = "searchText"),
                 verbatimTextOutput("search")
 )
 server <- function(input, output){
