@@ -1,6 +1,6 @@
 ---
 title: "Celena - Youtube Sentiment Analysis"
-author: 'Rajesh Bhatt (net id: rmb317) Rutu Desai (net id:rmd228) Shubham Kokane (netid:ssk203)'
+author: 'Rajesh Bhatt Rutu Desai Shubham Kokane'
 date: "04/25/2022"
 output:
   html_document: default
