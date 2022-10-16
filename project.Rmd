@@ -31,12 +31,12 @@ library("RColorBrewer")
 ## Authenticating yotube analytics:
 yt_oauth("client_id", "client_secret", token="")
 ```{r youtube_analytics, echo=FALSE}
-yt_oauth("754004588089-j155ksbuqlnrkgnvrd5l31kh5ugf6qob.apps.googleusercontent.com", "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", token="")
+yt_oauth("client_id", "client_secret", token="")
 ```
 
 ## Getting comments for a specific video based on Video ID:
 ```{r video_comment}
-res2 = get_comment_threads(c(video_id="EGcXF0iG-2s"), max_results = 101)
+res2 = get_comment_threads(c(video_id="videoId"), max_results = 101)
 head(res2, 1)
 ```
 
@@ -217,6 +217,6 @@ mydtm_tidy_gibbs %>% filter(topic==2) %>%
 
 ## Title of the Video:
 ```{r}
-get_video_details("EGcXF0iG-2s")$items[[1]]$snippet$title
+get_video_details("videoId")$items[[1]]$snippet$title
 
 ```
