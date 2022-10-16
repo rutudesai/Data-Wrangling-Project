@@ -19,7 +19,7 @@ library("topicmodels")
 yt_oauth()
 
 #Getting comments from a specific video comment section
-res2 <- get_comment_threads(c(video_id="EGcXF0iG-2s"), max_results = 101)
+res2 <- get_comment_threads(c(video_id="videoId"), max_results = 101)
 head(res2)
 
 #Creating df for only specific columns
